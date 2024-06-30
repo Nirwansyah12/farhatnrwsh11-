@@ -1,0 +1,49 @@
+using namespace std;
+
+// Definisi struktur Node
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+class LinkedList {
+private:
+    Node* head;
+
+public:
+    // Konstruktor
+    LinkedList() {
+        head = NULL;
+    }
+
+    // Method untuk menambahkan elemen ke linked list
+    void addNode(int value) {
+     Node* newNode = new Node;
+     newNode->data = value;
+     newNode->next = head;
+     head = newNode;
+    }
+
+    // Method untuk menampilkan linked list
+    void displayList() {
+        Node* temp = head;
+        while (temp != NULL) {
+            cout << temp->data << " -> ";
+            temp = temp->next;
+        }
+		cout << "NULL" << endl;
+    }
+};
+
+int main() {
+    LinkedList myList;
+
+    // Menambahkan elemen ke linked list
+    myList.addNode(3);
+    myList.addNode(2);
+    myList.addNode(1);
+    
+	myList.displayList();
+    return 0;
+}
