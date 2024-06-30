@@ -1,0 +1,114 @@
+#include <iostream>
+#include <string>
+
+struct Barang {
+    int id;
+    std::string nama;
+    int jumlah;
+    Barang* next;
+    Barang* prev;
+};
+
+class DoubleLinkedList {
+private:
+    Barang* head;
+    Barang* tail;
+
+public:
+    DoubleLinkedList() : head(nullptr), tail(nullptr) {}
+
+    // Menambahkan barang baru ke dalam linked list
+    void tambahBarang(int id, const std::string& nama, int jumlah) {
+        Barang* newBarang = new Barang{id, nama, jumlah, nullptr, nullptr};
+        if (head == nullptr) {
+            head = tail = newBarang;
+        } else {
+            tail->next = newBarang;
+            newBarang->prev = tail;
+            tail = newBarang;
+        }
+    }
+
+    // Menghapus barang berdasarkan ID
+    void hapusBarang(int id) {
+        if (head == nullptr) return;
+
+        Barang* temp = head;
+        while (temp != nullptr && temp->id != id) {
+            temp = temp->next;
+        }
+
+        if (temp == nullptr) return;
+
+        if (temp == head) {
+            head = head->next;
+            if (head != nullptr) {
+                head->prev = nullptr;
+            }
+        } else if (temp == tail) {
+            tail = tail->prev;
+            if (tail != nullptr) {
+                tail->next = nullptr;
+            }
+        } else {
+            temp->prev->next = temp->next;
+            temp->next->prev = temp->prev;
+        }
+
+        delete temp;
+    }
+
+    // Menampilkan semua barang dalam linked list
+    void tampilkanBarang() const {
+        Barang* temp = head;
+        while (temp != nullptr) {
+            std::cout << "ID: " << temp->id << ", Nama: " << temp->nama << ", Jumlah: " << temp->jumlah << std::endl;
+            temp = temp->next;
+        }
+    }
+
+    // Menampilkan semua barang dalam linked list dari belakang
+    void tampilkanBarangDariBelakang() const {
+        Barang* temp = tail;
+        while (temp != nullptr) {
+            std::cout << "ID: " << temp->id << ", Nama: " << temp->nama << ", Jumlah: " << temp->jumlah << std::endl;
+            temp = temp->prev;
+        }
+    }
+
+    // Destructor untuk membersihkan memory
+    ~DoubleLinkedList() {
+        Barang* temp = head;
+        while (temp != nullptr) {
+            Barang* next = temp->next;
+            delete temp;
+            temp = next;
+        }
+    }
+};
+
+int main() {
+    DoubleLinkedList daftarBelanja;
+
+    // Menambahkan barang
+    daftarBelanja.tambahBarang(1, "Beras", 10);
+    daftarBelanja.tambahBarang(2, "Gula", 5);
+    daftarBelanja.tambahBarang(3, "Minyak Goreng", 2);
+
+    // Menampilkan daftar barang
+    std::cout << "Daftar Barang:" << std::endl;
+    daftarBelanja.tampilkanBarang();
+
+    // Menghapus barang dengan ID 2
+    daftarBelanja.hapusBarang(2);
+
+    // Menampilkan daftar barang setelah penghapusan
+    std::cout << "\nDaftar Barang setelah penghapusan:" << std::endl;
+    daftarBelanja.tampilkanBarang();
+
+    // Menampilkan daftar barang dari belakang
+    std::cout << "\nDaftar Barang dari belakang:" << std::endl;
+    daftarBelanja.tampilkanBarangDariBelakang();
+
+    return 0;
+}
